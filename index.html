@@ -5,228 +5,111 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yêu cầu đổi kho GHN</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    :root {
-      font-family: Arial, sans-serif;
-      color-scheme: dark;
-    }
+    :root { color-scheme: dark; font-family: Arial, sans-serif; }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 16px;
-      background: #101827;
-      color: #f3f6fc;
-    }
-    .container { max-width: 620px; margin: auto; }
-    h1 { font-size: 23px; margin-bottom: 6px; }
-    .subtitle { color: #aab8cb; font-size: 13px; }
-    .card {
-      background: #1b293b;
-      border: 1px solid #34465b;
-      border-radius: 15px;
-      padding: 17px;
-      margin-top: 14px;
-    }
-    label {
-      display: block;
-      margin: 13px 0 7px;
-      font-size: 14px;
-      font-weight: 600;
-    }
-    input, select, textarea {
-      width: 100%;
-      background: #111d2d;
-      color: #fff;
-      border: 1px solid #40536b;
-      border-radius: 9px;
-      padding: 12px;
-      font: inherit;
-      font-size: 15px;
-    }
-    textarea {
-      min-height: 170px;
-      resize: vertical;
-      line-height: 1.6;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: 2px solid #5794ed;
-    }
-    .radio {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 11px 0;
-      margin: 0;
-      font-weight: normal;
-    }
-    .radio input { width: auto; }
-    .stats { display: flex; gap: 10px; margin-top: 12px; }
-    .stat {
-      flex: 1;
-      background: #111d2d;
-      border-radius: 9px;
-      padding: 12px;
-      text-align: center;
-    }
-    .stat strong {
-      display: block;
-      font-size: 24px;
-      color: #73b4ff;
-    }
-    button {
-      width: 100%;
-      border: none;
-      border-radius: 10px;
-      padding: 15px;
-      margin-top: 15px;
-      background: #4389d7;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .secondary { background: #33475e; }
-    .error { color: #ff9292; }
-    .success { color: #85e0ae; }
-    .hint {
-      color: #aab8cb;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-    #result {
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      font-size: 13px;
-      line-height: 1.6;
-    }
+    body { margin: 0; padding: 24px 14px; background: #101827; color: #f4f7fc; }
+    .container { max-width: 650px; margin: auto; }
+    h1 { font-size: 25px; margin: 0 0 6px; }
+    .sub { color: #a8bad0; margin: 0 0 20px; line-height: 1.5; }
+    .panel { background: #1d2b3e; border: 1px solid #334b64; border-radius: 16px; padding: 22px; margin-bottom: 16px; }
+    h2 { font-size: 19px; margin: 0 0 20px; }
+    label.field { display: block; margin: 17px 0 8px; font-weight: 700; }
+    input[type="text"], select, textarea { display: block; width: 100%; padding: 14px; border: 1px solid #3c5875; border-radius: 11px; background: #101d2f; color: white; font: inherit; }
+    textarea { min-height: 160px; resize: vertical; line-height: 1.5; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #5ea5ff; }
+    .radio { display: flex; gap: 14px; align-items: center; padding: 10px 0; cursor: pointer; }
+    .radio input { accent-color: #61a7ff; width: 18px; height: 18px; }
+    .hint { color: #a8bad0; font-size: 13px; margin-top: 7px; line-height: 1.5; }
+    .stats { display: flex; gap: 18px; flex-wrap: wrap; margin: 13px 0; font-size: 14px; }
+    .buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    button { padding: 13px 17px; border: 0; border-radius: 10px; color: white; background: #2864bd; font: inherit; font-weight: bold; cursor: pointer; }
+    button.secondary { background: #3d526c; }
+    button.submit { background: #168257; }
+    button:disabled { opacity: .55; cursor: wait; }
+    #resultCard { white-space: pre-wrap; overflow-wrap: anywhere; background: #172638; border: 1px solid #365573; border-radius: 12px; padding: 17px; margin-top: 15px; line-height: 1.65; }
+    #resultCard.error { border-color: #d96565; }
+    #resultCard.success { border-color: #39a978; }
     [hidden] { display: none !important; }
+    .notice { font-size: 13px; color: #ffd18a; line-height: 1.5; margin-top: 12px; }
   </style>
 </head>
-
 <body>
 <div class="container">
-  <h1>📦 YÊU CẦU ĐỔI KHO</h1>
-  <p class="subtitle">GHN · Biểu mẫu tiếp nhận yêu cầu</p>
+  <h1>📦 YÊU CẦU ĐỔI KHO GHN</h1>
+  <p class="sub">Biểu mẫu kiểm tra và gửi yêu cầu đổi kho.</p>
 
-  <div class="card">
-    <h3>Thông tin người yêu cầu</h3>
-
-    <label for="branch">Bưu cục yêu cầu *</label>
+  <section class="panel">
+    <h2>Thông tin nhân viên</h2>
+    <label class="field" for="branch">Bưu cục *</label>
     <select id="branch">
       <option value="">-- Chọn bưu cục --</option>
-      <option value="20047000">20047000 - Lãng Yên</option>
-      <option value="20081000">20081000 - Hòa Mã</option>
-      <option value="21488000">21488000 - 298 Trần Điền</option>
-      <option value="22925000">22925000 - Thanh Đàm</option>
-      <option value="23063000">23063000 - CK Hai Bà Trưng</option>
-      <option value="23183000">23183000 - Lĩnh Nam</option>
+      <option value="20047000">20047000 - Bưu Cục 53 Lãng Yên - Q. Hai Bà Trưng</option>
+      <option value="20081000">20081000 - Bưu Cục 16A Hòa Mã - Q. Hai Bà Trưng</option>
+      <option value="21488000">21488000 - Bưu Cục 298 Trần Điền - Định Công</option>
+      <option value="22925000">22925000 - Bưu Cục 79/9B Thanh Đàm - Q. Hoàng Mai</option>
+      <option value="23063000">23063000 - (HNO) CK Hai Bà Trưng</option>
+      <option value="23183000">23183000 - (HNO) Lĩnh Nam</option>
     </select>
+    <label class="field" for="msnv">Mã nhân viên *</label>
+    <input id="msnv" type="text" placeholder="Nhập MSNV" autocomplete="off">
+  </section>
 
-    <label for="msnv">Mã nhân viên *</label>
-    <input id="msnv" placeholder="Nhập MSNV" inputmode="numeric">
-  </div>
-
-  <div class="card">
-    <h3>Thông tin đổi kho</h3>
-
-    <label>Loại kho cần đổi *</label>
-    <label class="radio">
-      <input type="radio" name="warehouseType" value="Kho Giao">
-      Kho Giao
-    </label>
-    <label class="radio">
-      <input type="radio" name="warehouseType" value="Kho Lấy">
-      Kho Lấy
-    </label>
-    <label class="radio">
-      <input type="radio" name="warehouseType" value="Kho Trả">
-      Kho Trả
-    </label>
-
-    <label for="destination">Mã kho đích *</label>
-    <input
-      id="destination"
-      placeholder="Nhập mã kho cần chuyển đến"
-      inputmode="numeric"
-    >
-  </div>
-
-  <div class="card">
-    <h3>Danh sách mã đơn</h3>
-    <label for="codes">Quét hoặc nhập mã đơn *</label>
-    <textarea
-      id="codes"
-      placeholder="Quét mã liên tục, mỗi mã một dòng"
-    ></textarea>
-
-    <p class="hint">
-      Hỗ trợ mã cách nhau bằng xuống dòng, dấu phẩy
-      hoặc khoảng trắng. Máy quét nên được cấu hình
-      tự Enter sau mỗi lần quét.
-    </p>
-
-    <div class="stats">
-      <div class="stat">
-        <strong id="total">0</strong>
-        Mã duy nhất
-      </div>
-      <div class="stat">
-        <strong id="duplicates">0</strong>
-        Mã trùng
-      </div>
+  <section class="panel">
+    <h2>Thông tin đổi kho</h2>
+    <label class="field">Loại kho cần đổi *</label>
+    <label class="radio"><input type="radio" name="warehouseType" value="Kho Giao">Kho Giao</label>
+    <label class="radio"><input type="radio" name="warehouseType" value="Kho Lấy">Kho Lấy</label>
+    <label class="radio"><input type="radio" name="warehouseType" value="Kho Trả">Kho Trả</label>
+    <div id="destinationGroup" hidden>
+      <label class="field" for="destination">Mã kho đích *</label>
+      <input id="destination" type="text" placeholder="Nhập mã kho cần chuyển đến" inputmode="numeric">
     </div>
+  </section>
 
-    <button type="button" class="secondary" onclick="clearCodes()">
-      Xóa danh sách mã
-    </button>
-  </div>
-
-  <button type="button" onclick="checkRequest()">
-    KIỂM TRA YÊU CẦU
-  </button>
-
-  <div class="card" id="resultCard" hidden>
-    <h3>Kết quả kiểm tra</h3>
-    <div id="result"></div>
-  </div>
-
-  <p class="hint">
-    Phiên bản thử nghiệm: chưa gửi dữ liệu về Telegram hoặc n8n.
-  </p>
+  <section class="panel">
+    <h2>Danh sách mã đơn</h2>
+    <label class="field" for="codes">Mã đơn (mỗi dòng một mã) *</label>
+    <textarea id="codes" placeholder="GYRTEST01&#10;GYRTEST02"></textarea>
+    <div class="hint">Có thể nhập nhiều mã, ngăn cách bằng xuống dòng, dấu phẩy hoặc khoảng trắng.</div>
+    <div class="stats"><span>Mã duy nhất: <strong id="total">0</strong></span><span>Mã trùng: <strong id="duplicates">0</strong></span></div>
+    <div class="buttons">
+      <button type="button" onclick="checkRequest()">🔎 Kiểm tra</button>
+      <button type="button" class="submit" id="sendButton" onclick="sendRequest()">📤 Gửi yêu cầu</button>
+      <button type="button" class="secondary" onclick="clearCodes()">Xóa mã đơn</button>
+    </div>
+    <div class="notice">Chế độ thử nghiệm: chỉ gửi MSNV TEST001 và mã GYRTEST...; không nhập dữ liệu khách hàng hoặc đơn thật.</div>
+    <div id="resultCard" hidden role="status" aria-live="polite"></div>
+  </section>
 </div>
-
 <script>
-  const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
-
+  const WEBHOOK_URL = "https://tiennv.app.n8n.cloud/webhook/ghn-doi-kho";
   const codesInput = document.getElementById("codes");
   const totalElement = document.getElementById("total");
   const duplicatesElement = document.getElementById("duplicates");
+  const resultCard = document.getElementById("resultCard");
+  const destinationGroup = document.getElementById("destinationGroup");
+  const destinationInput = document.getElementById("destination");
+  const sendButton = document.getElementById("sendButton");
 
-  function parseCodes(text) {
-    const parts = text
-      .toUpperCase()
-      .split(/[\s,;]+/)
-      .map(code => code.trim())
-      .filter(Boolean);
+  document.querySelectorAll('input[name="warehouseType"]').forEach(radio => {
+    radio.addEventListener("change", () => {
+      const type = document.querySelector('input[name="warehouseType"]:checked')?.value;
+      destinationGroup.hidden = !type || type === "Kho Lấy";
+      if (type === "Kho Lấy") destinationInput.value = "";
+      resultCard.hidden = true;
+    });
+  });
 
-    const seen = new Set();
+  function parseCodes(raw) {
+    const parts = raw.toUpperCase().split(/[\s,;]+/).map(x => x.trim()).filter(Boolean);
     const unique = [];
     const duplicates = [];
-
+    const seen = new Set();
     for (const code of parts) {
-      if (seen.has(code)) {
-        duplicates.push(code);
-      } else {
-        seen.add(code);
-        unique.push(code);
-      }
+      if (seen.has(code)) duplicates.push(code);
+      else { seen.add(code); unique.push(code); }
     }
-
     return { unique, duplicates };
   }
 
@@ -235,69 +118,90 @@
     totalElement.textContent = data.unique.length;
     duplicatesElement.textContent = data.duplicates.length;
   }
-
   codesInput.addEventListener("input", updateStats);
 
   function clearCodes() {
     codesInput.value = "";
     updateStats();
-    document.getElementById("resultCard").hidden = true;
+    resultCard.hidden = true;
     codesInput.focus();
   }
 
-  function checkRequest() {
+  function showResult(text, error = false) {
+    resultCard.hidden = false;
+    resultCard.className = error ? "error" : "success";
+    resultCard.textContent = text;
+    resultCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function getRequest() {
     const branch = document.getElementById("branch").value;
     const msnv = document.getElementById("msnv").value.trim();
-    const type = document.querySelector(
-      'input[name="warehouseType"]:checked'
-    )?.value;
-    const destination = document.getElementById("destination").value.trim();
+    const warehouseType = document.querySelector('input[name="warehouseType"]:checked')?.value;
+    const destination = warehouseType === "Kho Lấy" ? "" : destinationInput.value.trim();
     const data = parseCodes(codesInput.value);
-    const resultCard = document.getElementById("resultCard");
-    const result = document.getElementById("result");
 
-    resultCard.hidden = false;
-
-    if (!branch || !msnv || !type || !destination ||
-        data.unique.length === 0) {
-      result.className = "error";
-      result.textContent =
-        "Vui lòng điền đầy đủ các trường bắt buộc.";
-      return;
+    if (!branch || !msnv || !warehouseType ||
+        (warehouseType !== "Kho Lấy" && !destination) || !data.unique.length) {
+      throw new Error("Vui lòng điền đầy đủ các trường bắt buộc.");
     }
+    const invalid = data.unique.filter(code => !/^[A-Z0-9_-]+$/.test(code));
+    if (invalid.length) throw new Error("Mã chứa ký tự không hợp lệ:\n" + invalid.join("\n"));
+    return { branch, msnv, warehouseType, destination, codes: data.unique, duplicates: data.duplicates };
+  }
 
-    const invalid = data.unique.filter(
-      code => !/^[A-Z0-9_-]+$/.test(code)
-    );
-
-    if (invalid.length > 0) {
-      result.className = "error";
-      result.textContent =
-        "Có mã chứa ký tự không hợp lệ:\n" +
-        invalid.join("\n");
-      return;
-    }
-
-    const summary = [
-      "ĐÃ KIỂM TRA THÔNG TIN",
-      "",
-      "Bưu cục: " + branch,
-      "MSNV: " + msnv,
-      "Loại kho: " + type,
-      "Kho đích: " + destination,
-      "Số mã duy nhất: " + data.unique.length,
+  function formatRequest(data) {
+    return [
+      "ĐÃ KIỂM TRA THÔNG TIN", "",
+      "Bưu cục: " + data.branch,
+      "MSNV: " + data.msnv,
+      "Loại kho: " + data.warehouseType,
+      ...(data.warehouseType === "Kho Lấy" ? [] : ["Kho đích: " + data.destination]),
+      "Số mã duy nhất: " + data.codes.length,
       "Mã trùng: " + data.duplicates.length,
-      "",
-      "DANH SÁCH MÃ ĐƠN:",
-      ...data.unique
-    ];
+      "", "DANH SÁCH MÃ ĐƠN:", ...data.codes
+    ].join("\n");
+  }
 
-    result.className = "success";
-    result.textContent = summary.join("\n");
-    resultCard.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+  function checkRequest() {
+    try { showResult(formatRequest(getRequest())); }
+    catch (err) { showResult(err.message, true); }
+  }
+
+  async function sendRequest() {
+    let data;
+    try { data = getRequest(); }
+    catch (err) { showResult(err.message, true); return; }
+
+    // Chỉ gửi dữ liệu giả khi chưa thiết lập xác thực máy chủ.
+    if (data.msnv !== "TEST001" ||
+        data.codes.some(code => !/^GYRTEST[A-Z0-9_-]*$/.test(code))) {
+      showResult("Chỉ được gửi dữ liệu thử nghiệm: MSNV TEST001 và mã bắt đầu GYRTEST.", true);
+      return;
+    }
+
+    sendButton.disabled = true;
+    sendButton.textContent = "Đang gửi...";
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          branch: data.branch,
+          msnv: data.msnv,
+          warehouseType: data.warehouseType,
+          destination: data.destination,
+          codes: data.codes
+        })
+      });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      showResult("Đã gửi yêu cầu thử nghiệm đến n8n.\n\n" + formatRequest(data));
+    } catch (err) {
+      showResult("Chưa xác nhận được việc gửi yêu cầu. Kiểm tra Executions trong n8n trước khi gửi lại để tránh trùng.\nChi tiết: " + err.message, true);
+    } finally {
+      sendButton.disabled = false;
+      sendButton.textContent = "📤 Gửi yêu cầu";
+    }
   }
 </script>
 </body>
