@@ -6,24 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yêu cầu đổi kho GHN</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <style>
     :root {
       font-family: Arial, sans-serif;
       color-scheme: dark;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 16px;
       background: #101827;
       color: #f3f6fc;
     }
+
     .container {
       max-width: 620px;
       margin: auto;
     }
-    h1 { font-size: 23px; margin-bottom: 6px; }
-    .subtitle { color: #aab8cb; font-size: 13px; }
+
+    h1 {
+      font-size: 23px;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: #aab8cb;
+      font-size: 13px;
+    }
+
     .card {
       background: #1b293b;
       border: 1px solid #34465b;
@@ -31,12 +46,14 @@
       padding: 17px;
       margin-top: 14px;
     }
+
     label {
       display: block;
       margin: 13px 0 7px;
       font-size: 14px;
       font-weight: 600;
     }
+
     input, select, textarea {
       width: 100%;
       background: #111d2d;
@@ -47,14 +64,17 @@
       font: inherit;
       font-size: 15px;
     }
+
     textarea {
       min-height: 170px;
       resize: vertical;
       line-height: 1.6;
     }
+
     input:focus, select:focus, textarea:focus {
       outline: 2px solid #5794ed;
     }
+
     .radio {
       display: flex;
       align-items: center;
@@ -63,12 +83,17 @@
       margin: 0;
       font-weight: normal;
     }
-    .radio input { width: auto; }
+
+    .radio input {
+      width: auto;
+    }
+
     .stats {
       display: flex;
       gap: 10px;
       margin-top: 12px;
     }
+
     .stat {
       flex: 1;
       background: #111d2d;
@@ -76,11 +101,13 @@
       padding: 12px;
       text-align: center;
     }
+
     .stat strong {
       display: block;
       font-size: 24px;
       color: #73b4ff;
     }
+
     button {
       width: 100%;
       border: none;
@@ -93,26 +120,41 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .secondary { background: #33475e; }
-    .error { color: #ff9292; }
-    .success { color: #85e0ae; }
+
+    .secondary {
+      background: #33475e;
+    }
+
+    .error {
+      color: #ff9292;
+    }
+
+    .success {
+      color: #85e0ae;
+    }
+
     .hint {
       color: #aab8cb;
       font-size: 12px;
       line-height: 1.5;
     }
+
     #result {
       white-space: pre-wrap;
       overflow-wrap: anywhere;
       font-size: 13px;
       line-height: 1.6;
     }
-    [hidden] { display: none !important; }
+
+    [hidden] {
+      display: none !important;
+    }
   </style>
 </head>
 
 <body>
 <div class="container">
+
   <h1>📦 YÊU CẦU ĐỔI KHO</h1>
   <p class="subtitle">
     GHN · Biểu mẫu tiếp nhận yêu cầu
@@ -124,17 +166,32 @@
     <label for="branch">Bưu cục yêu cầu *</label>
     <select id="branch">
       <option value="">-- Chọn bưu cục --</option>
-      <option value="20047000">20047000 - Lãng Yên</option>
-      <option value="20081000">20081000 - Hòa Mã</option>
-      <option value="21488000">21488000 - 298 Trần Điền</option>
-      <option value="22925000">22925000 - Thanh Đàm</option>
-      <option value="23063000">23063000 - CK Hai Bà Trưng</option>
-      <option value="23183000">23183000 - Lĩnh Nam</option>
+      <option value="20047000">
+        20047000 - Lãng Yên
+      </option>
+      <option value="20081000">
+        20081000 - Hòa Mã
+      </option>
+      <option value="21488000">
+        21488000 - 298 Trần Điền
+      </option>
+      <option value="22925000">
+        22925000 - Thanh Đàm
+      </option>
+      <option value="23063000">
+        23063000 - CK Hai Bà Trưng
+      </option>
+      <option value="23183000">
+        23183000 - Lĩnh Nam
+      </option>
     </select>
 
     <label for="msnv">Mã nhân viên *</label>
-    <input id="msnv" placeholder="Nhập MSNV"
-           inputmode="numeric">
+    <input
+      id="msnv"
+      placeholder="Nhập MSNV"
+      inputmode="numeric"
+    >
   </div>
 
   <div class="card">
@@ -143,40 +200,49 @@
     <label>Loại kho cần đổi *</label>
 
     <label class="radio">
-      <input type="radio" name="warehouseType"
-             value="Kho Giao">
+      <input
+        type="radio"
+        name="warehouseType"
+        value="Kho Giao"
+      >
       Kho Giao
     </label>
 
     <label class="radio">
-      <input type="radio" name="warehouseType"
-             value="Kho Lấy">
+      <input
+        type="radio"
+        name="warehouseType"
+        value="Kho Lấy"
+      >
       Kho Lấy
     </label>
 
     <label class="radio">
-      <input type="radio" name="warehouseType"
-             value="Kho Trả">
+      <input
+        type="radio"
+        name="warehouseType"
+        value="Kho Trả"
+      >
       Kho Trả
     </label>
 
-    <div id="currentWarehouse" hidden>
-      <label for="currentCode">Mã kho hiện tại *</label>
-      <input id="currentCode"
-             placeholder="Nhập mã kho hiện tại">
-    </div>
-
     <label for="destination">Mã kho đích *</label>
-    <input id="destination"
-           placeholder="Nhập mã kho cần chuyển đến">
+    <input
+      id="destination"
+      placeholder="Nhập mã kho cần chuyển đến"
+      inputmode="numeric"
+    >
   </div>
 
   <div class="card">
     <h3>Danh sách mã đơn</h3>
 
     <label for="codes">Quét hoặc nhập mã đơn *</label>
-    <textarea id="codes"
-      placeholder="Quét mã liên tục, mỗi mã một dòng"></textarea>
+
+    <textarea
+      id="codes"
+      placeholder="Quét mã liên tục, mỗi mã một dòng"
+    ></textarea>
 
     <p class="hint">
       Hỗ trợ mã cách nhau bằng xuống dòng,
@@ -188,16 +254,20 @@
     <div class="stats">
       <div class="stat">
         <strong id="total">0</strong>
-        Mã hợp lệ
+        Mã duy nhất
       </div>
+
       <div class="stat">
         <strong id="duplicates">0</strong>
         Mã trùng
       </div>
     </div>
 
-    <button type="button" class="secondary"
-            onclick="clearCodes()">
+    <button
+      type="button"
+      class="secondary"
+      onclick="clearCodes()"
+    >
       Xóa danh sách mã
     </button>
   </div>
@@ -212,40 +282,28 @@
   </div>
 
   <p class="hint">
-    Phiên bản thử nghiệm: chưa gửi dữ liệu
-    về Telegram hoặc n8n.
+    Phiên bản thử nghiệm:
+    chưa gửi dữ liệu về Telegram hoặc n8n.
   </p>
+
 </div>
 
 <script>
   const tg = window.Telegram?.WebApp;
+
   if (tg) {
     tg.ready();
     tg.expand();
   }
 
-  const codesInput = document.getElementById("codes");
-  const totalElement = document.getElementById("total");
+  const codesInput =
+    document.getElementById("codes");
+
+  const totalElement =
+    document.getElementById("total");
+
   const duplicatesElement =
     document.getElementById("duplicates");
-
-  const warehouseRadios =
-    document.querySelectorAll(
-      'input[name="warehouseType"]'
-    );
-
-  warehouseRadios.forEach(radio => {
-    radio.addEventListener("change", () => {
-      const selected =
-        document.querySelector(
-          'input[name="warehouseType"]:checked'
-        )?.value;
-
-      document.getElementById(
-        "currentWarehouse"
-      ).hidden = selected !== "Kho Lấy";
-    });
-  });
 
   function parseCodes(text) {
     const parts = text
@@ -272,19 +330,27 @@
 
   function updateStats() {
     const data = parseCodes(codesInput.value);
-    totalElement.textContent = data.unique.length;
+
+    totalElement.textContent =
+      data.unique.length;
+
     duplicatesElement.textContent =
       data.duplicates.length;
   }
 
-  codesInput.addEventListener("input", updateStats);
+  codesInput.addEventListener(
+    "input",
+    updateStats
+  );
 
   function clearCodes() {
     codesInput.value = "";
     updateStats();
+
     document.getElementById(
       "resultCard"
     ).hidden = true;
+
     codesInput.focus();
   }
 
@@ -293,43 +359,38 @@
       document.getElementById("branch").value;
 
     const msnv =
-      document.getElementById("msnv").value.trim();
+      document.getElementById("msnv")
+        .value.trim();
 
     const type =
       document.querySelector(
         'input[name="warehouseType"]:checked'
       )?.value;
 
-    const current =
-      document.getElementById(
-        "currentCode"
-      ).value.trim();
-
     const destination =
-      document.getElementById(
-        "destination"
-      ).value.trim();
+      document.getElementById("destination")
+        .value.trim();
 
     const data = parseCodes(codesInput.value);
+
     const resultCard =
       document.getElementById("resultCard");
+
     const result =
       document.getElementById("result");
 
     resultCard.hidden = false;
 
-    if (!branch || !msnv || !type ||
-        !destination || data.unique.length === 0) {
+    if (
+      !branch ||
+      !msnv ||
+      !type ||
+      !destination ||
+      data.unique.length === 0
+    ) {
       result.className = "error";
       result.textContent =
         "Vui lòng điền đầy đủ các trường bắt buộc.";
-      return;
-    }
-
-    if (type === "Kho Lấy" && !current) {
-      result.className = "error";
-      result.textContent =
-        "Kho Lấy yêu cầu nhập mã kho hiện tại.";
       return;
     }
 
@@ -351,9 +412,6 @@
       "Bưu cục: " + branch,
       "MSNV: " + msnv,
       "Loại kho: " + type,
-      ...(type === "Kho Lấy"
-        ? ["Kho hiện tại: " + current]
-        : []),
       "Kho đích: " + destination,
       "Số mã duy nhất: " + data.unique.length,
       "Mã trùng: " + data.duplicates.length,
@@ -364,11 +422,13 @@
 
     result.className = "success";
     result.textContent = summary.join("\n");
+
     resultCard.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
   }
 </script>
+
 </body>
 </html>
