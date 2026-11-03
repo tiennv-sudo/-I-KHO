@@ -286,7 +286,7 @@
 
     <textarea
       id="codes"
-      placeholder="GYRTEST01&#10;GYRTEST02"
+      placeholder="Nhập mã đơn thứ nhất&#10;Nhập mã đơn thứ hai"
     ></textarea>
 
     <div class="hint">
@@ -329,11 +329,6 @@
       </button>
     </div>
 
-    <div class="notice">
-      Chế độ thử nghiệm: chỉ gửi MSNV TEST001
-      và các mã bắt đầu bằng GYRTEST.
-      Không nhập dữ liệu đơn hàng thật.
-    </div>
 
     <div
       id="resultCard"
@@ -513,21 +508,6 @@
       return;
     }
 
-    // Chỉ cho phép dữ liệu giả để thử nghiệm.
-    if (
-      data.msnv !== "TEST001" ||
-      data.codes.some(
-        code => !/^GYRTEST[A-Z0-9_-]*$/.test(code)
-      )
-    ) {
-      showResult(
-        "Chỉ được gửi dữ liệu thử nghiệm: " +
-        "MSNV TEST001 và mã bắt đầu GYRTEST.",
-        true
-      );
-      return;
-    }
-
     sendButton.disabled = true;
     sendButton.textContent = "Đang gửi...";
 
@@ -556,7 +536,7 @@
       }
 
       showResult(
-        "Đã gửi yêu cầu thử nghiệm đến n8n.\n\n" +
+        "✅ Đã gửi yêu cầu đổi kho thành công.\n\n" +
         formatRequest(data)
       );
 
