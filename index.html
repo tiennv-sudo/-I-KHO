@@ -189,33 +189,10 @@
       Bưu cục *
     </label>
 
-    <select id="branch">
-      <option value="">-- Chọn bưu cục --</option>
-
-      <option value="20047000">
-        20047000 - Bưu Cục 53 Lãng Yên
-      </option>
-
-      <option value="20081000">
-        20081000 - Bưu Cục 16A Hòa Mã
-      </option>
-
-      <option value="21488000">
-        21488000 - Bưu Cục 298 Trần Điền
-      </option>
-
-      <option value="22925000">
-        22925000 - Bưu Cục 79/9B Thanh Đàm
-      </option>
-
-      <option value="23063000">
-        23063000 - (HNO) CK Hai Bà Trưng
-      </option>
-
-      <option value="23183000">
-        23183000 - (HNO) Lĩnh Nam
-      </option>
+    <select id="branch" required>
+      <option value="">-- Đang tải danh sách bưu cục --</option>
     </select>
+    <div class="hint" id="branchStatus" role="status">Đang tải bưu cục từ Google Sheets...</div>
 
     <label class="field" for="msnv">
       Mã nhân viên *
@@ -230,10 +207,10 @@
   </section>
 
   <section class="panel">
-    <h2>Thông tin đổi kho</h2>
+    <h2>Thông tin yêu cầu</h2>
 
     <label class="field">
-      Loại kho cần đổi *
+      Loại yêu cầu *
     </label>
 
     <label class="radio">
@@ -263,6 +240,11 @@
       Kho Trả
     </label>
 
+    <label class="radio">
+      <input type="radio" name="warehouseType" value="Revert giao lại">
+      Revert giao lại
+    </label>
+
     <div id="destinationGroup">
       <label class="field" for="destination">
         Mã kho đích *
@@ -273,7 +255,11 @@
         type="text"
         placeholder="Nhập mã kho cần chuyển đến"
         inputmode="numeric"
+        list="destinationSuggestions"
+        autocomplete="off"
       >
+      <datalist id="destinationSuggestions"></datalist>
+      <div class="hint" id="destinationStatus">Gợi ý theo mã hoặc tên bưu cục; vẫn được nhập mã ngoài danh sách.</div>
     </div>
   </section>
 
@@ -343,6 +329,70 @@
 <script>
   const WEBHOOK_URL =
     "https://tiennv.app.n8n.cloud/webhook/ghn-doi-kho";
+
+  const DIRECTORY_URL =
+    "https://tiennv.app.n8n.cloud/webhook/ghn-danh-muc-buu-cuc";
+
+  const branchSelect = document.getElementById("branch");
+  const branchStatus = document.getElementById("branchStatus");
+  const destinationGroup = document.getElementById("destinationGroup");
+  const destinationSuggestions = document.getElementById("destinationSuggestions");
+  const destinationStatus = document.getElementById("destinationStatus");
+  let destinations = [];
+
+  function toggleDestination() {
+    const action = document.querySelector('input[name="warehouseType"]:checked')?.value;
+    const isRevert = action === "Revert giao lại";
+    destinationGroup.hidden = isRevert;
+    destinationInput.required = !isRevert;
+    destinationInput.disabled = isRevert;
+    if (isRevert) destinationInput.value = "";
+  }
+
+  document.querySelectorAll('input[name="warehouseType"]').forEach(radio => {
+    radio.addEventListener("change", toggleDestination);
+  });
+
+  async function loadDirectory() {
+    try {
+      const response = await fetch(DIRECTORY_URL, { cache: "no-store" });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      if (!Array.isArray(data.branches) || !Array.isArray(data.destinations)) {
+        throw new Error("Dữ liệu danh mục không đúng cấu trúc");
+      }
+      const previous = branchSelect.value;
+      branchSelect.replaceChildren(new Option("-- Chọn bưu cục --", ""));
+      data.branches.forEach(item => {
+        const code = String(item.code ?? "").trim();
+        const name = String(item.name ?? "").trim();
+        if (code && name) branchSelect.add(new Option(code + " - " + name, code));
+      });
+      if ([...branchSelect.options].some(opt => opt.value === previous)) branchSelect.value = previous;
+      branchStatus.textContent = "Đã tải " + (branchSelect.options.length - 1) + " bưu cục điền.";
+      destinations = data.destinations.map(item => ({
+        code: String(item.code ?? "").trim(),
+        name: String(item.name ?? "").trim()
+      })).filter(item => item.code && item.name);
+      destinationSuggestions.replaceChildren();
+      destinations.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.code;
+        option.label = item.name;
+        option.textContent = item.name;
+        destinationSuggestions.appendChild(option);
+      });
+      destinationStatus.textContent = "Có " + destinations.length + " bưu cục gợi ý. Có thể nhập mã khác.";
+    } catch (err) {
+      branchSelect.replaceChildren(new Option("-- Không tải được danh sách --", ""));
+      branchStatus.textContent = "Không tải được danh sách bưu cục. Tải lại trang để thử lại. " + err.message;
+      destinationStatus.textContent = "Chưa tải được gợi ý; vẫn có thể nhập mã kho đích thủ công.";
+    }
+  }
+
+  // Chọn gợi ý chỉ lưu mã, không gửi tên bưu cục.
+  loadDirectory();
+  toggleDestination();
 
   const codesInput =
     document.getElementById("codes");
@@ -444,7 +494,7 @@
       !branch ||
       !msnv ||
       !warehouseType ||
-      !destination ||
+      (warehouseType !== "Revert giao lại" && !destination) ||
       data.unique.length === 0
     ) {
       throw new Error(
@@ -453,7 +503,7 @@
     }
 
     const invalid = data.unique.filter(
-      code => !/^[A-Z0-9_-]+$/.test(code)
+      code => !/^[A-Z0-9_.-]+$/.test(code)
     );
 
     if (invalid.length) {
@@ -480,7 +530,7 @@
       "Bưu cục: " + data.branch,
       "MSNV: " + data.msnv,
       "Loại kho: " + data.warehouseType,
-      "Kho đích: " + data.destination,
+      ...(data.warehouseType === "Revert giao lại" ? [] : ["Kho đích: " + data.destination]),
       "Số mã duy nhất: " + data.codes.length,
       "Mã trùng: " + data.duplicates.length,
       "",
@@ -536,7 +586,7 @@
       }
 
       showResult(
-        "✅ Đã gửi yêu cầu đổi kho thành công.\n\n" +
+        "✅ Đã gửi yêu cầu thành công.\n\n" +
         formatRequest(data)
       );
 
