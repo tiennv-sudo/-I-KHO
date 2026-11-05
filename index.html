@@ -392,7 +392,6 @@
 
   // Chọn gợi ý chỉ lưu mã, không gửi tên bưu cục.
   loadDirectory();
-  toggleDestination();
 
   const codesInput =
     document.getElementById("codes");
@@ -411,6 +410,9 @@
 
   const sendButton =
     document.getElementById("sendButton");
+
+  toggleDestination();
+  updateStats();
 
   function parseCodes(raw) {
     const parts = raw
